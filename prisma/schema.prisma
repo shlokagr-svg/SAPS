@@ -1,0 +1,126 @@
+// This is your Prisma schema file. It defines the data model for your application.
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  targets   Target[]
+  tasks     Task[]
+  notes     Note[]
+  expenses  Expense[]
+  events    Event[]
+  workouts  Workout[]
+  foodLogs  FoodLog[]
+  healthMetrics HealthMetric[]
+  screenTimes ScreenTime[]
+  dailyScores DailyScore[]
+  importJobs ImportJob[]
+}
+
+model Target {
+  id        Int      @id @default(autoincrement())
+  title     String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Task {
+  id        Int      @id @default(autoincrement())
+  title     String
+  completed Boolean  @default(false)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Note {
+  id        Int      @id @default(autoincrement())
+  content   String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Expense {
+  id        Int      @id @default(autoincrement())
+  amount    Float    
+  description String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Event {
+  id        Int      @id @default(autoincrement())
+  title     String
+  date      DateTime
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Workout {
+  id        Int      @id @default(autoincrement())
+  type      String
+  duration  Int      // duration in minutes
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model FoodItem {
+  id          Int      @id @default(autoincrement())
+  name        String
+  calories     Int
+  carbohydrates Int
+  proteins    Int
+  fats        Int
+}
+
+model FoodLog {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  foodItems  FoodLogItem[]
+}
+
+model FoodLogItem {
+  id        Int      @id @default(autoincrement())
+  foodLogId Int
+  foodItemId Int
+  quantity  Int
+  foodLog   FoodLog  @relation(fields: [foodLogId], references: [id])
+  foodItem  FoodItem @relation(fields: [foodItemId], references: [id])
+}
+
+model HealthMetric {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  weight    Float
+  height    Float
+  bmi       Float
+}
+
+model ScreenTime {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  hours     Float
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model DailyScore {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  score     Int
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model ImportJob {
+  id        Int      @id @default(autoincrement())
+  status    String
+  createdAt DateTime @default(now())
+  completedAt DateTime?
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
